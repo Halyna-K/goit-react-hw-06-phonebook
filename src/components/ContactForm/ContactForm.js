@@ -3,8 +3,10 @@ import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
+import {connect} from 'react-redux';
+import {addContact,deleteContact} from '../../redux/contacts/actions'
 
-export function ContactForm({ addNewContact }) {
+function ContactForm({ addNewContact }) {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
   const nameId = uuid();
@@ -27,9 +29,11 @@ export function ContactForm({ addNewContact }) {
     e.preventDefault();
     const contact = { name, number };
     addNewContact(contact);
+    mapDispatchToProps(this.onAdd(contact))
     setName("");
     setNumber("");
   };
+
 
   return (
     <form className={s.form} onSubmit={handleSubmit}>
@@ -73,3 +77,18 @@ export function ContactForm({ addNewContact }) {
     </form>
   );
 }
+
+const mapStateToProps = (state) => {
+  return {
+    contactsList: state.contacts
+  }
+};
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    onAdd: () => dispatch(addContact()),
+    onDelete: () => dispatch(deleteContact()),
+  }
+}
+
+export default connect(mapStateToProps,mapDispatchToProps)(ContactForm)

@@ -1,8 +1,8 @@
 import "./App.css";
 import { v4 as uuid } from "uuid";
 import { useState, useMemo, useCallback, useEffect } from "react";
-import initialContacts from "./components/dataBase/contacts.json";
-import { ContactForm } from "./components/ContactForm/ContactForm";
+import initialContacts from "./dataBase/contacts.json";
+import ContactForm from "./components/ContactForm/ContactForm";
 import { ContactList } from "./components/ContactList/ContactList";
 import { Filter } from "./components/Filter/Filter";
 
