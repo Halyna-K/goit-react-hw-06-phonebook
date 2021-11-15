@@ -3,24 +3,24 @@ import PropTypes from "prop-types";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useSelector, useDispatch } from 'react-redux';
-import {getContacts} from '../../redux/contacts/selectors';
+import { getFilteredContacts } from '../../redux/contacts/selectors';
 import { deleteContact } from '../../redux/contacts/actions'
 
 const ContactList = () => {
-const contacts = useSelector(getContacts);
+const contacts = useSelector(getFilteredContacts);
 const dispatch = useDispatch();
 
 return (
   <ul className={s.list}>
-    {contacts.map((contact) => (
-      <li key={contact.id} className={s.item}>
-        <p className={s.text}>{contact.name + " : " + contact.number}</p>
+    {contacts.map(({id, name, number}) => (
+    <li key={id} className={s.item}>
+        <p className={s.text}>{name + " : " + number}</p>
 
         <Button
-          id= {contact.id}
+          id= {id}
           variant="outline-secondary"
           onClick={() => (
-            dispatch(deleteContact(contact.id))
+            dispatch(deleteContact(id))
           )}
         >
           Delete

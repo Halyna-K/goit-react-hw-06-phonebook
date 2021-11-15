@@ -14,7 +14,6 @@ function ContactForm () {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
 
-
   const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
@@ -32,18 +31,17 @@ function ContactForm () {
   };
 
   const addNewContact = (obj) => {
-    const nameId = uuid();
     const sameName = contacts.map((el) => el.name).includes(obj.name);
     if (sameName) {
       alert(`${obj.name} is already in contacts!`);
     } else {
-      dispatch(addContact({ id: nameId, ...obj}));
+      dispatch(addContact({...obj}, obj.id));
     }
   }
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const contact = { name, number };
+    const contact = {id: uuid(), name, number };
     addNewContact(contact)
     setName("");
     setNumber("");
