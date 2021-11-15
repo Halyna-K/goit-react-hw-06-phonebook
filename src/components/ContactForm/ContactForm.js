@@ -3,14 +3,20 @@ import { useState } from "react";
 import { v4 as uuid } from "uuid";
 import { Button } from "react-bootstrap";
 import "bootstrap/dist/css/bootstrap.min.css";
-import {connect} from 'react-redux';
-import {addContact,deleteContact} from '../../redux/contacts/actions'
+import { useSelector, useDispatch } from 'react-redux';
+import { addContact } from '../../redux/contacts/actions';
+import {getContacts} from '../../redux/contacts/selectors';
 
-function ContactForm({ addNewContact }) {
+const nameId = uuid();
+const numberId = uuid();
+
+function ContactForm () {
   const [name, setName] = useState("");
   const [number, setNumber] = useState("");
-  const nameId = uuid();
-  const numberId = uuid();
+
+
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,15 +31,23 @@ function ContactForm({ addNewContact }) {
     }
   };
 
+  const addNewContact = (obj) => {
+    const nameId = uuid();
+    const sameName = contacts.map((el) => el.name).includes(obj.name);
+    if (sameName) {
+      alert(`${obj.name} is already in contacts!`);
+    } else {
+      dispatch(addContact({ id: nameId, ...obj}));
+    }
+  }
+
   const handleSubmit = (e) => {
     e.preventDefault();
     const contact = { name, number };
-    addNewContact(contact);
-    mapDispatchToProps(this.onAdd(contact))
+    addNewContact(contact)
     setName("");
     setNumber("");
   };
-
 
   return (
     <form className={s.form} onSubmit={handleSubmit}>
@@ -70,7 +84,6 @@ function ContactForm({ addNewContact }) {
       <Button
         type="submit"
         variant="secondary"
-        //   className={s.btn}
       >
         Add contacts
       </Button>
@@ -78,17 +91,4 @@ function ContactForm({ addNewContact }) {
   );
 }
 
-const mapStateToProps = (state) => {
-  return {
-    contactsList: state.contacts
-  }
-};
-
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onAdd: () => dispatch(addContact()),
-    onDelete: () => dispatch(deleteContact()),
-  }
-}
-
-export default connect(mapStateToProps,mapDispatchToProps)(ContactForm)
+export default ContactForm
